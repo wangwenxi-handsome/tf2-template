@@ -19,6 +19,7 @@ def hvd_init():
     tf.config.set_visible_devices(gpus[hvd.local_rank() % len(gpus)], 'GPU')
     # TensorFlow 自动选择一个现有且受支持的设备来运行操作，gpu优先级高于cpu
     tf.config.set_soft_device_placement(True)
+    
     # 设置cpu运算的核数
     tf.config.threading.set_inter_op_parallelism_threads(8)
 
