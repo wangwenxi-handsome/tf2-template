@@ -49,11 +49,15 @@ def main(args):
     # 加载checkpoint
     model.restore_or_initialize(logdir = args.logdir)
     
-    # train or test
+    # train, test or predict
     if args.mode == "train":
         model.fit(dataset, logdir = args.logdir, epochs = configs.train.epochs)
+    if args.mode == "test":
+        metrics = model.evalute(dataset)
+    if args.mode == "predict":
+        predicts = model.predict(dataset)
         
-    # save model, 只在主进程保存
+    # save model, 这种保存方式无需源代码即可使用, 只在主进程保存
     if args.mode in ('export', 'train') and hvd.rank() == 0:
         save_model(model, args.logdir)
 
