@@ -52,9 +52,9 @@ def main(args):
     # train, test or predict
     if args.mode == "train":
         model.fit(dataset, logdir = args.logdir, epochs = configs.train.epochs)
-    if args.mode == "test":
+    if args.mode == "test" and hvd.rank() == 0:
         metrics = model.evalute(dataset)
-    if args.mode == "predict":
+    if args.mode == "predict" and hvd.rank() == 0:
         predicts = model.predict(dataset)
         
     # save model, 这种保存方式无需源代码即可使用, 只在主进程保存
