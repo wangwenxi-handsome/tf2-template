@@ -88,12 +88,14 @@ class HorovodModel(tf.keras.Model):
 
         return {'loss': loss}
 
-    def fit(self,
-            dataset,
-            epochs,
-            logdir,
-            summary_freq=100,
-        ):
+    def fit(
+        self,
+        dataset,
+        epochs,
+        logdir,
+        summary_freq = 100,
+        validation_data = None,
+    ):
         # 新建一个CheckpointManager用于checkpoint储存，只在主进程上保存
         ckpt = tf.train.Checkpoint(net=self, optimizer=self.optimizer)
         ckpt_manager = tf.train.CheckpointManager(ckpt, logdir, max_to_keep=3)
@@ -133,6 +135,7 @@ class HorovodModel(tf.keras.Model):
             initial_epoch = self.iterations // len(dataset),
             verbose = 2,
             callbacks=callbacks,
+            validation_data = validation_data,
         )
 
     # 重新加载logdir中的模型checkpoint
